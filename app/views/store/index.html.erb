@@ -1,0 +1,28 @@
+<% if notice %>
+    <aside id="notice"><%= notice %></aside>
+<% end %>
+<div class="session_counter">
+    <% if !session[:counter].nil? && session[:counter] > 5 %>
+        <%= "Visited #{session[:counter]}" + " time".pluralize(session[:counter]) %>
+    <% end %>
+</div>
+<h1>Pragmatic Catalog</h1>
+<ul class="catalog">
+    <% cache @products do %>
+        <% @products.each do |product| %>
+            <% cache product do %>
+                <li>
+                    <%= image_tag(product.image_url, :size => "150x200") %>
+                    <h2><%= product.title %></h2>
+                    <p>
+                        <%= sanitize(product.description) %>
+                    </p>
+                    <div class="price">
+                        <%= number_to_currency(product.price) %>
+                        <%= button_to 'Add to cart', line_items_path(product_id: product) %>
+                    </div>
+                </li>
+            <% end %>
+        <% end %>
+    <% end %>
+</ul>
